@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('first_name', 45); // agregando nuevos campos (first_name,last,email,password) para la tabla users
+            $table->string('last_name', 45)->nullable();
+            $table->string('email', 45)->unique(); // los agregamos unicos para evitar que se repitan los correos en las base de datos....
+            $table->timestamp('email_verified_at')->nullable(); // este campo para verifica el email
+            $table->string('password', 300);
             $table->rememberToken();
             $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
-            $table->string('token');
+            $table->string('token'); // este campo para almacenar el token de restablecimiento de contraseña
             $table->timestamp('created_at')->nullable();
         });
 
@@ -42,7 +43,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('users'); // eliminando la tabla users para que no quede en la base de datos por si se desea revertir la migración
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }
