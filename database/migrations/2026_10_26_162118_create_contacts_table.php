@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('contacts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('User_id')->constrained('users')->cascadeOnDelete(); // estableciendo la relación con la tabla users
+            $table->foreignId('User_id')->constrained('users')->cascadeOnDelete(); // estableciendo la relación con la tabla users (el id)
             $table->string('first_name', 45);
             $table->string('last_name', 45)->nullable(); // este campo es opcional, ya que es decisión del usuario si desea agregarlo o no
-            $table->string('phone_number', 50)->unique(); // este campo debe ser único 
+            $table->string('phone_number', 50)->unique(); // este campo debe ser único
             $table->string('email', 100)->unique();
-            $table->string('address', 100);
+            $table->string('address', 100)->nullable();
             $table->string('avatar_url', 255)->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
