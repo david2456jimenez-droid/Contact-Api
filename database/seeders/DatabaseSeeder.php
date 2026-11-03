@@ -9,13 +9,19 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
+    use WithoutModelEvents; // este trait evita que se disparen los eventos de modelo durante la ejecución del seeder, lo que puede ser útil para mejorar el rendimiento y evitar efectos secundarios no deseados.
 
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
+        User::factory()->create([
+            'first_name' => 'Administrador',
+            'last_name' => 'Contact',
+            'email' => 'admin@contact.test',
+        ]);
+
         $uno = User::factory()->create([
             'first_name' => 'usuario', 'last_name' => 'uno', 'email' => 'uno@gmail.com',
         ]);
