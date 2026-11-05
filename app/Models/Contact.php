@@ -23,6 +23,7 @@ class Contact extends Model
         'last_name',
         'phone_number',
         'email',
+        'deleted_at',
     ];
 
     /**
