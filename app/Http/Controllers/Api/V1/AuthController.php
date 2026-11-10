@@ -7,6 +7,8 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -23,12 +25,12 @@ class AuthController extends Controller
 
         if (! $user || ! Hash::check($request->validated('password'), $user->password)) {
             throw ValidationException::withMessages([
-                'email' => 'Las credenciales no son correctas',
+                'email' => 'Las credenciales no son correctas.',
             ]);
         }
 
         if (! $user->is_active) {
-            abort(403, 'El usuario no esta activo');
+            abort(403, 'La cuenta esta desactivada.');
         }
 
         $token = $user->createToken($request->validated('device_name'))->plainTextToken;
@@ -38,5 +40,23 @@ class AuthController extends Controller
             'token_type' => 'Bearer',
             'user' => new UserResource($user),
         ]);
+    }
+
+    /**
+     * Perfil del usuario utenticado.
+     */
+    public function me(Request $request): UserResource
+    {
+        return new UserResource($request->user());
+    }
+
+    /**
+     * Cierra la sesion y revoca el token actual.
+     */
+    public function logout(Request $request): Response
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->noContent();
     }
 }
