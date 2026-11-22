@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Contact extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     /**
      * La tabla asociada al modelo (opcional si sigue la convención en plural).
@@ -23,7 +24,8 @@ class Contact extends Model
         'last_name',
         'phone_number',
         'email',
-        'deleted_at',
+        'address',
+        'avatar_url',
     ];
 
     /**

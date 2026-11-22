@@ -18,10 +18,11 @@ return new class extends Migration
             $table->string('last_name', 45)->nullable(); // este campo es opcional, ya que es decisión del usuario si desea agregarlo o no
             $table->string('phone_number', 50)->unique(); // este campo debe ser único
             $table->string('email', 100)->unique();
-            $table->string('address', 100)->nullable();
+            $table->string('address', 100);
             $table->string('avatar_url', 255)->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 
