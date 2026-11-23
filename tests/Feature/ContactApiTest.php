@@ -56,3 +56,25 @@ it('crea un contacto con datos validos', function () {
         'user_id' => $this->user->id,
     ]);
 });
+it('no deja crear un contacto con email repetido', function () {
+    Sanctum::actingAs($this->user);
+    Contact::factory()->create(['email' => 'repetido@contact.test']);
+
+    $this->postJson('/api/v1/contacts', [
+        'first_name' => 'Pedro',
+        'last_name' => 'Gomez',
+        'phone_number' => '3009998888',
+        'email' => 'repetido@contact.test',
+        'address' => 'Carrera 3 # 4-5',
+    ])->assertUnprocessable();
+});
+
+it('elimina un contacto propio con soft delete', function () {
+    Sanctum::actingAs($this->user);
+    $contact = Contact::factory()->for($this->user)->create();
+
+    $this->deleteJson("/api/v1/contacts/{$contact->id}")
+        ->assertNoContent();
+
+    $this->assertSoftDeleted($contact);
+});
