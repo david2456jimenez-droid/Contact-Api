@@ -21,7 +21,9 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $contact = $request->user()->contacts()->create($request->validated());
+
+        return (new ContactResource($contact))->response()->setStatusCode(201);
     }
 
     /**
