@@ -38,3 +38,21 @@ it('no deja ver un contacto de otro usuario', function () {
     $this->getJson("/api/v1/contacts/{$ajeno->id}")
         ->assertForbidden();
 });
+it('crea un contacto con datos validos', function () {
+    Sanctum::actingAs($this->user);
+
+    $this->postJson('/api/v1/contacts', [
+        'first_name' => 'Maria',
+        'last_name' => 'Lopez',
+        'phone_number' => '3001234567',
+        'email' => 'maria@contact.test',
+        'address' => 'Calle 10 # 5-20',
+    ])
+        ->assertCreated()
+        ->assertJsonPath('data.email', 'maria@contact.test');
+
+    $this->assertDatabaseHas('contacts', [
+        'email' => 'maria@contact.test',
+        'user_id' => $this->user->id,
+    ]);
+});
