@@ -78,3 +78,30 @@ it('elimina un contacto propio con soft delete', function () {
 
     $this->assertSoftDeleted($contact);
 });
+
+it('actualiza un contacto propio', function () {
+    Sanctum::actingAs($this->user);
+    $contact = Contact::factory()->for($this->user)->create();
+
+    $this->putJson("/api/v1/contacts/{$contact->id}", [
+        'first_name' => 'Nuevo',
+        'last_name' => 'Nombre',
+        'phone_number' => $contact->phone_number,
+        'email' => $contact->email,
+        'address' => 'Calle nueva 123',
+    ])
+        ->assertOk()
+        ->assertJsonPath('data.first_name', 'Nuevo');
+});
+
+it('no deja actualizar un contacto de otro usuario', function () {
+    Sanctum::actingAs($this->user);
+    $ajeno = Contact::factory()->create();
+
+    $this->putJson("/api/v1/contacts/{$ajeno->id}", [
+        'first_name' => 'Hack',
+        'phone_number' => $ajeno->phone_number,
+        'email' => $ajeno->email,
+        'address' => 'Calle 1',
+    ])->assertForbidden();
+});
