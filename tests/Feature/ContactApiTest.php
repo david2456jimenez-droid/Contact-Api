@@ -21,3 +21,20 @@ it('lista solo los contactos del usuario autenticado', function () {
 it('pide token para listar contactos', function () {
     $this->getJson('/api/v1/contacts')->assertUnauthorized();
 });
+
+it('muestra un contacto propio', function () {
+    Sanctum::actingAs($this->user);
+    $contact = Contact::factory()->for($this->user)->create();
+
+    $this->getJson("/api/v1/contacts/{$contact->id}")
+        ->assertOk()
+        ->assertJsonPath('data.email', $contact->email);
+});
+
+it('no deja ver un contacto de otro usuario', function () {
+    Sanctum::actingAs($this->user);
+    $ajeno = Contact::factory()->create();
+
+    $this->getJson("/api/v1/contacts/{$ajeno->id}")
+        ->assertForbidden();
+});
