@@ -31,26 +31,26 @@ class ContactController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Contact $contact)
+    public function show(Request $request, Contact $contact)
     {
+        abort_if($contact->user_id !== $request->user()->id, 403);
+
         return new ContactResource($contact);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateContactRequest $request, Contact $contact)
     {
+        abort_if($contact->user_id !== $request->user()->id, 403);
+
         $contact->update($request->validated());
 
         return new ContactResource($contact);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Contact $contact)
+    public function destroy(Request $request, Contact $contact)
     {
+        abort_if($contact->user_id !== $request->user()->id, 403);
+
         $contact->delete();
 
         return response()->noContent();
