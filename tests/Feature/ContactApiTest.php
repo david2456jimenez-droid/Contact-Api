@@ -105,3 +105,16 @@ it('no deja actualizar un contacto de otro usuario', function () {
         'address' => 'Calle 1',
     ])->assertForbidden();
 });
+
+it('da un avatar por defecto si el contacto no tiene uno', function () {
+    Sanctum::actingAs($this->user);
+    $contact = Contact::factory()->for($this->user)->create([
+        'first_name' => 'Maria',
+        'avatar_url' => null,
+    ]);
+
+    $response = $this->getJson("/api/v1/contacts/{$contact->id}")
+        ->assertOk();
+
+    expect($response->json('data.avatar_url'))->toStartWith('data:image/svg+xml');
+});

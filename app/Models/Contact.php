@@ -35,4 +35,18 @@ class Contact extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function defaultAvatar(): string
+    {
+        $colors = ['#0B7A85', '#8A5200', '#1F6E45', '#A23628', '#5B4B9A', '#2F5D8C'];
+        $color = $colors[$this->id % count($colors)];
+        $letter = mb_strtoupper(mb_substr($this->first_name, 0, 1));
+
+        $svg = '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96">'
+            .'<circle cx="48" cy="48" r="48" fill="'.$color.'"/>'
+            .'<text x="48" y="62" font-size="44" font-family="Arial" fill="#fff" text-anchor="middle">'.$letter.'</text>'
+            .'</svg>';
+
+        return 'data:image/svg+xml;base64,'.base64_encode($svg);
+    }
 }

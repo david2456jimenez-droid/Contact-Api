@@ -21,7 +21,7 @@ class ContactResource extends JsonResource
             'phone_number' => $this->phone_number,
             'email' => $this->email,
             'address' => $this->address,
-            'avatar_url' => $this->avatar_url,
+            'avatar_url' => $this->avatar_url ?? $this->defaultAvatar(),
             'created_at' => $this->created_at?->toIso8601String(), // este formato es para que se pueda serializar osea convertir a string el objeto de fecha y hora
         ];
     }
