@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Contact\StoreContactRequest;
+use App\Http\Requests\Contact\UpdateContactRequest;
 use App\Http\Resources\ContactResource;
 use App\Models\Contact;
 use Illuminate\Http\Request;
@@ -19,7 +21,7 @@ class ContactController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
         $contact = $request->user()->contacts()->create($request->validated());
 
@@ -37,9 +39,11 @@ class ContactController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Contact $contact)
+    public function update(UpdateContactRequest $request, Contact $contact)
     {
-        //
+        $contact->update($request->validated());
+
+        return new ContactResource($contact);
     }
 
     /**
